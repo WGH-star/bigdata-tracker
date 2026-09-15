@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#378ADD">
+    <meta name="description" content="빅데이터분석기사 74일 학습 추적 앱">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="빅데이터 학습">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23378ADD' width='180' height='180'/><text x='50%' y='50%' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>74</text></svg>">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22빅데이터분석기사 74일%22,%22short_name%22:%2274일앱%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22theme_color%22:%22%23378ADD%22,%22background_color%22:%22%23ffffff%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23378ADD' width='192' height='192'/><text x='50%' y='50%' font-size='100' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>74</text></svg>%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
+    <title>빅데이터분석기사 74일 학습</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 0.75rem;
+            background: #f5f5f5;
+        }
+
+        .header {
+            margin-bottom: 1rem;
+        }
+
+        .countdown {
+            background: linear-gradient(135deg, #e24b4a 0%, #a32d2d 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(226, 75, 74, 0.3);
+        }
+
+        .countdown-num {
+            font-size: 48px;
+            font-weight: 600;
+        }
+
+        .countdown-text {
+            font-size: 14px;
+            opacity: 0.95;
+            margin-top: 6px;
+        }
+
+        .progress-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #378ADD 0%, #185fa5 100%);
+            transition: width 0.3s ease;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tabs::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .tab {
+            padding: 0.6rem 1rem;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            color: #666;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .tab:active {
+            transform: scale(0.98);
+        }
+
+        .tab.active {
+            background: #378ADD;
+            color: white;
+            border-color: #378ADD;
+        }
+
+        .week-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 28px;
+            font-weight: 600;
+            color: #378ADD;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .day-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .day-info {
+            flex: 1;
+        }
+
+        .day-num {
+            font-size: 14px;
+            font-weight: 600;
+            color: #378ADD;
+        }
+
+        .day-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .day-count {
+            font-size: 13px;
+            color: #378ADD;
+            font-weight: 600;
+        }
+
+        .day-topic {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #378ADD;
+        }
+
+        .check-item label {
+            cursor: pointer;
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .check-item input:checked + label {
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .final-checklist {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .final-checklist h4 {
+            margin: 0 0 1rem;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .final-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+            font-size: 13px;
+        }
+
+        .final-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: #378ADD;
+        }
+
+        .footer {
+            padding: 2rem 0 1rem;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .countdown-num {
+                font-size: 36px;
+            }
+
+            .tabs {
+                gap: 0.4rem;
+            }
+
+            .tab {
+                padding: 0.5rem 0.8rem;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 시험까지 카운트다운 -->
+        <div class="countdown">
+            <div class="countdown-num" id="dday">73</div>
+            <div class="countdown-text">시험까지 남은 날</div>
+        </div>
+
+        <!-- 전체 진도율 -->
+        <div class="progress-wrapper">
+            <div class="progress-label">
+                <span>전체 진도</span>
+                <span id="overallPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overallBar" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- 주별 탭 -->
+        <div class="tabs" id="weekTabs">
+            <div class="tab active" onclick="switchWeek(0)" data-week="0">WEEK 1</div>
+            <div class="tab" onclick="switchWeek(1)" data-week="1">WEEK 2</div>
+            <div class="tab" onclick="switchWeek(2)" data-week="2">WEEK 3</div>
+            <div class="tab" onclick="switchWeek(3)" data-week="3">WEEK 4</div>
+            <div class="tab" onclick="switchWeek(4)" data-week="4">WEEK 5</div>
+            <div class="tab" onclick="switchWeek(5)" data-week="5">WEEK 6</div>
+            <div class="tab" onclick="switchWeek(6)" data-week="6">WEEK 7</div>
+            <div class="tab" onclick="switchWeek(7)" data-week="7">WEEK 8</div>
+            <div class="tab" onclick="switchWeek(8)" data-week="8">WEEK 9</div>
+            <div class="tab" onclick="switchWeek(9)" data-week="9">WEEK 10</div>
+            <div class="tab" onclick="switchWeek(10)" data-week="10">FINAL</div>
+        </div>
+
+        <!-- 주별 통계 -->
+        <div class="week-stats">
+            <div class="stat-card">
+                <div class="stat-num" id="weekProgress">0%</div>
+                <div class="stat-label">이번 주 진도</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="weekItems">0</div>
+                <div class="stat-label">체크 항목</div>
+            </div>
+        </div>
+
+        <!-- DAY별 카드 -->
+        <div id="dayContent"></div>
+
+        <!-- 최종 점검 -->
+        <div class="final-checklist" id="finalChecklist" style="display: none;">
+            <h4>✨ 시험 전 마지막 체크</h4>
+            <div class="final-item">
+                <input type="checkbox" id="final1" onchange="saveFinal()"> 
+                <label for="final1">문제를 보면 필요한 기능을 판단할 수 있다</label>
+            </div>
+            <div class="final-item">
+                <input type="checkbox" id="final2" onchange="saveFinal()"> 
+                <label for="final2">빈 코드 셀에서 직접 작성할 수 있다</label>
+            </div>
+            <div class="final-item">
+                <input type="checkbox" id="final3" onchange="saveFinal()"> 
+                <label for="final3">막혔을 때 디버깅할 수 있다</label>
+            </div>
+            <div class="final-item">
+                <input type="checkbox" id="final4" onchange="saveFinal()"> 
+                <label for="final4">작업형1을 해결할 수 있다</label>
+            </div>
+            <div class="final-item">
+                <input type="checkbox" id="final5" onchange="saveFinal()"> 
+                <label for="final5">작업형2 전체 파이프라인을 작성할 수 있다</label>
+            </div>
+            <div class="final-item">
+                <input type="checkbox" id="final6" onchange="saveFinal()"> 
+                <label for="final6">작업형3에서 검정을 선택할 수 있다</label>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>매일 진도를 체크하며 합격을 향해 나아가세요! 💪</p>
+            <p style="margin-top: 0.5rem;">마지막 업데이트: <span id="lastUpdate">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        const SCHEDULE_DATA = [
+            {week: 0, day: 1, date: '9/15', topic: 'Python 기초 + DataFrame 입문', items: ['Python 자료형','리스트/딕셔너리','조건문/반복문','함수','import pandas as pd','DataFrame 생성','head()','shape','columns','dtypes','직접 미니문제 3개']},
+            {week: 0, day: 2, date: '9/16', topic: 'Series/DataFrame 구조 이해', items: ['Series 이해','DataFrame 이해','행과 열 개념','index','columns','values','info()','describe()','직접 DataFrame 생성','구조 확인 문제']},
+            {week: 0, day: 3, date: '9/17', topic: '컬럼 선택', items: ['단일 컬럼','여러 컬럼','컬럼 순서','새로운 컬럼 만들기','컬럼 삭제','drop()','컬럼 선택 문제 5개']},
+            {week: 0, day: 4, date: '9/18', topic: 'loc / iloc', items: ['loc','iloc','행 선택','열 선택','행+열 동시 선택','loc/iloc 비교문제','빈 코드에서 직접 5문제']},
+            {week: 0, day: 5, date: '9/19', topic: '조건 필터링', items: ['비교연산자','Boolean 조건','&','|','~','조건 여러 개 연결','필터링 문제 5개']},
+            {week: 0, day: 6, date: '9/20', topic: '정렬 + 기본 통계', items: ['sort_values()','오름차순/내림차순','mean()','sum()','max()','min()','median()','종합문제']},
+            {week: 0, day: 7, date: '9/21', topic: '1주차 복습', items: ['DataFrame 생성','구조 확인','컬럼 선택','loc/iloc','조건 필터링','정렬','통계량','30분 제한 미니테스트']},
+            {week: 1, day: 8, date: '9/22', topic: '값 변경 + 파생변수', items: ['값 변경','조건에 따른 값 변경','파생변수 생성','산술연산','apply() 개념','직접 문제 5개']},
+            {week: 1, day: 9, date: '9/23', topic: '고유값/빈도', items: ['unique()','nunique()','value_counts()','범주형 데이터 이해','빈도 문제']},
+            {week: 1, day: 10, date: '9/24', topic: '통계량 활용', items: ['mean','median','std','var','sum','count','describe','문제풀이']},
+            {week: 1, day: 11, date: '9/25', topic: '결측치 ①', items: ['결측치 확인','isnull()','isna()','notna()','결측치 개수','컬럼별 결측치']},
+            {week: 1, day: 12, date: '9/26', topic: '결측치 ②', items: ['dropna()','fillna()','평균 대체','중앙값 대체','최빈값 대체','작업형1 결측치 문제']},
+            {week: 1, day: 13, date: '9/27', topic: '문자열 처리', items: ['.str','contains()','replace()','split()','lower()','문자열 필터링 문제']},
+            {week: 1, day: 14, date: '9/28', topic: '2주차 종합', items: ['기본조작 복습','결측치','문자열','통계량','작업형1 미니테스트','오답 기록']},
+            {week: 2, day: 15, date: '9/29', topic: 'groupby 기초', items: ['groupby()','그룹별 평균','그룹별 합계','그룹별 개수','부서별 평균 급여 문제']},
+            {week: 2, day: 16, date: '9/30', topic: 'groupby 심화', items: ['여러 집계','agg()','그룹별 통계','transform()','작업형1 groupby 문제']},
+            {week: 2, day: 17, date: '10/1', topic: '이상치/IQR', items: ['Q1/Q3','IQR','이상치 기준','이상치 필터링','작업형1 이상치 문제']},
+            {week: 2, day: 18, date: '10/2', topic: '날짜/시간', items: ['to_datetime()','연/월/일 추출','.dt','날짜 필터링','날짜 문제']},
+            {week: 2, day: 19, date: '10/3', topic: 'Timedelta', items: ['날짜 차이','Timedelta','기간 계산','날짜 간격 문제','작업형1 응용']},
+            {week: 2, day: 20, date: '10/4', topic: 'concat/merge', items: ['concat()','행 방향','열 방향','merge()','key 이해','inner/left join']},
+            {week: 2, day: 21, date: '10/5', topic: 'pivot + 종합', items: ['pivot_table()','행/열 지정','집계','concat','merge','Pandas 종합문제']},
+            {week: 3, day: 22, date: '10/6', topic: '작업형1 유형 분석', items: ['35문제 유형 분류','필터링 유형','정렬 유형','통계량 유형','직접 문제풀이']},
+            {week: 3, day: 23, date: '10/7', topic: '결측치 문제', items: ['결측치 문제 3~5개','직접 코드 작성','오답 분석','2회차 재풀이']},
+            {week: 3, day: 24, date: '10/8', topic: '문자열 문제', items: ['문자열 문제 3~5개','.str 활용','조건 필터링 연결','재풀이']},
+            {week: 3, day: 25, date: '10/9', topic: 'groupby 문제', items: ['groupby 문제 3~5개','agg','transform','그룹별 통계']},
+            {week: 3, day: 26, date: '10/10', topic: '날짜/이상치 문제', items: ['datetime','Timedelta','IQR','이상치','복합문제']},
+            {week: 3, day: 27, date: '10/11', topic: '작업형1 실전', items: ['시간 제한','작업형1 세트 풀이','오답 분류 A/B/C','C등급 취약개념 등록']},
+            {week: 3, day: 28, date: '10/12', topic: '작업형1 보완', items: ['A/B/C 재분류','C등급 집중','35문제 중 미완료 문제','빈 코드 재풀이']},
+            {week: 4, day: 29, date: '10/13', topic: '머신러닝 구조 이해', items: ['지도학습','분류','회귀','X/y','train/test','전체 파이프라인 이해']},
+            {week: 4, day: 30, date: '10/14', topic: '데이터 불러오기+EDA', items: ['CSV 불러오기','head()','info()','describe()','결측치 확인','변수 유형 확인']},
+            {week: 4, day: 31, date: '10/15', topic: '전처리', items: ['결측치','범주형 변수','수치형 변수','인코딩','X/y 분리']},
+            {week: 4, day: 32, date: '10/16', topic: 'train/validation', items: ['train_test_split','random_state','stratify 개념','데이터 누수 개념']},
+            {week: 4, day: 33, date: '10/17', topic: '첫 분류 모델', items: ['모델 import','fit','predict','평가','직접 전체 코드 작성']},
+            {week: 4, day: 34, date: '10/18', topic: '작업형2 첫 완주', items: ['데이터 불러오기','전처리','X/y','train/test','모델','예측','결과파일']},
+            {week: 5, day: 35, date: '10/19', topic: '이진분류', items: ['이진분류','전처리','모델 학습','평가']},
+            {week: 5, day: 36, date: '10/20', topic: '다중분류', items: ['다중분류','범주형 처리','예측','평가']},
+            {week: 5, day: 37, date: '10/21', topic: '정확도/precision/recall/F1', items: ['정확도','precision','recall','F1','문제별 평가기준 판단']},
+            {week: 5, day: 38, date: '10/22', topic: 'ROC-AUC + 지표비교', items: ['ROC-AUC','평가 지표 비교','분류 실전문제']},
+            {week: 5, day: 39, date: '10/23', topic: '분류 전처리', items: ['분류 전처리','모델','평가','제출파일']},
+            {week: 5, day: 40, date: '10/24', topic: '분류 실전 1세트', items: ['분류 실전 1세트','시간 측정','오답']},
+            {week: 5, day: 41, date: '10/25', topic: '분류 실전 2세트', items: ['분류 실전 2세트','빈 코드 작성','취약점 보완']},
+            {week: 6, day: 42, date: '10/26', topic: '회귀 기초', items: ['회귀 개념','X/y','회귀 모델','fit/predict']},
+            {week: 6, day: 43, date: '10/27', topic: '회귀 전처리', items: ['회귀 전처리','결측치','범주형 변수','인코딩']},
+            {week: 6, day: 44, date: '10/28', topic: 'MAE/MSE/RMSE/R²', items: ['MAE','MSE','RMSE','R²','평가 문제']},
+            {week: 6, day: 45, date: '10/29', topic: '회귀 실전', items: ['회귀 실전','모델 학습','예측','결과 확인']},
+            {week: 6, day: 46, date: '10/30', topic: '회귀 실전 2세트', items: ['회귀 실전 2세트','시간 측정','오답']},
+            {week: 6, day: 47, date: '10/31', topic: '분류 vs 회귀', items: ['분류 vs 회귀','공통 파이프라인','차이점 정리','빈 코드 작성']},
+            {week: 6, day: 48, date: '11/1', topic: '작업형2 모의고사', items: ['작업형2 모의고사','전체 파이프라인','제출파일','시간 기록']},
+            {week: 7, day: 49, date: '11/2', topic: '작업형2 템플릿', items: ['작업형2 템플릿','빈 코드 작성','전처리','모델','제출']},
+            {week: 7, day: 50, date: '11/3', topic: '분류 실전', items: ['분류 실전','시간 제한','오답']},
+            {week: 7, day: 51, date: '11/4', topic: '회귀 실전', items: ['회귀 실전','시간 제한','오답']},
+            {week: 7, day: 52, date: '11/5', topic: '작업형2 종합', items: ['작업형2 종합','분류/회귀 랜덤 선택','빈 코드 작성']},
+            {week: 8, day: 53, date: '11/6', topic: '가설검정 기본', items: ['가설검정 기본','귀무가설','대립가설','p-value','유의수준']},
+            {week: 8, day: 54, date: '11/7', topic: '단일표본 t검정', items: ['단일표본 t검정','독립표본 t검정','상황 구분']},
+            {week: 8, day: 55, date: '11/8', topic: '대응표본 t검정', items: ['대응표본 t검정','세 가지 t검정 비교','검정 선택 문제']},
+            {week: 9, day: 56, date: '11/9', topic: '일원 ANOVA', items: ['일원 ANOVA','집단 수','검정 선택']},
+            {week: 9, day: 57, date: '11/10', topic: '이원 ANOVA', items: ['이원 ANOVA','주효과','상호작용']},
+            {week: 9, day: 58, date: '11/11', topic: '카이제곱', items: ['카이제곱 적합도','독립성','동질성','세 가지 비교']},
+            {week: 9, day: 59, date: '11/12', topic: '상관계수', items: ['상관계수','Pearson','상관관계 해석','검정 문제']},
+            {week: 9, day: 60, date: '11/13', topic: '단순 선형회귀', items: ['단순 선형회귀','회귀계수','p-value','R²']},
+            {week: 9, day: 61, date: '11/14', topic: '다중 선형회귀', items: ['다중 선형회귀','회귀계수','유의성','결과 해석']},
+            {week: 9, day: 62, date: '11/15', topic: '로지스틱 회귀', items: ['로지스틱 회귀','오즈','오즈비','결과 해석','작업형3 종합문제']},
+            {week: 9, day: 63, date: '11/16', topic: '전범위 + 기출', items: ['작업형1 실전','작업형2 실전','작업형3 실전','전체 시간 측정']},
+            {week: 9, day: 64, date: '11/17', topic: '작업형1 기출', items: ['작업형1 기출','오답','취약 Pandas 재학습']},
+            {week: 9, day: 65, date: '11/18', topic: '작업형2 기출', items: ['작업형2 기출','전처리','모델','제출파일']},
+            {week: 9, day: 66, date: '11/19', topic: '작업형3 기출', items: ['작업형3 기출','검정 선택','p-value','해석']},
+            {week: 9, day: 67, date: '11/20', topic: '취약점 집중', items: ['핵심 취약점 집중','C등급 문제 재풀이','유사문제 추가']},
+            {week: 9, day: 68, date: '11/21', topic: '전범위 모의고사', items: ['전범위 모의고사','실제 시간 제한','점수 기록','오답 분석']},
+            {week: 9, day: 69, date: '11/22', topic: '모의고사 오답', items: ['모의고사 오답 재풀이','작업형1 약점','작업형2 약점','작업형3 약점']},
+            {week: 10, day: 70, date: '11/23', topic: '최종 실전 ①', items: ['전범위 모의고사','시간 측정','오답','취약점 3개 선정']},
+            {week: 10, day: 71, date: '11/24', topic: '작업형1 최종', items: ['필터링','정렬','결측치','groupby','문자열','datetime','merge','pivot','취약 문제 재풀이']},
+            {week: 10, day: 72, date: '11/25', topic: '작업형2 최종', items: ['데이터 불러오기','EDA','전처리','X/y','train/test','모델','평가','예측','제출파일','빈 코드에서 전체 작성']},
+            {week: 10, day: 73, date: '11/26', topic: '작업형3 최종', items: ['t검정','ANOVA','카이제곱','상관','선형회귀','로지스틱 회귀','오즈비','검정 선택 훈련','p-value 해석']},
+            {week: 10, day: 74, date: '11/27', topic: '최종 점검', items: ['전범위 미니 모의고사','작업형1 핵심 함수 확인','작업형2 템플릿 확인','작업형3 검정 선택표 확인','자주 틀리는 문제만 재풀이','새로운 개념 공부하지 않기','시험 준비물 확인','충분히 쉬기']},
+        ];
+
+        let currentWeek = 0;
+
+        function initApp() {
+            const today = new Date();
+            const testDay = new Date('2026-11-28');
+            const daysLeft = Math.ceil((testDay - today) / (1000 * 60 * 60 * 24));
+            document.getElementById('dday').textContent = Math.max(0, daysLeft);
+            
+            updateLastUpdate();
+            renderWeek(0);
+            setupAutoSave();
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:application/javascript;base64,Ly8gU2ltcGxlIFNlcnZpY2UgV29ya2VyIGZvciBvZmZsaW5lIHN1cHBvcnQ=');
+            }
+        }
+
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = timeStr;
+        }
+
+        function switchWeek(week) {
+            currentWeek = week;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[data-week="${week}"]`).classList.add('active');
+            
+            if (week === 10) {
+                document.getElementById('finalChecklist').style.display = 'block';
+                loadFinal();
+            } else {
+                document.getElementById('finalChecklist').style.display = 'none';
+            }
+            
+            renderWeek(week);
+        }
+
+        function renderWeek(week) {
+            const weekDays = SCHEDULE_DATA.filter(d => d.week === week);
+            const content = document.getElementById('dayContent');
+            
+            let html = '';
+            weekDays.forEach(day => {
+                const checked = JSON.parse(localStorage.getItem(`day_${day.day}_items`) || '[]');
+                const completedCount = checked.length;
+                const totalCount = day.items.length;
+                const progress = Math.round((completedCount / totalCount) * 100);
+                
+                html += `
+                    <div class="day-card">
+                        <div class="day-header">
+                            <div class="day-info">
+                                <div class="day-num">Day ${day.day}</div>
+                                <div class="day-date">${day.date}</div>
+                            </div>
+                            <div class="day-count">${completedCount}/${totalCount}</div>
+                        </div>
+                        <div class="day-topic">${day.topic}</div>
+                        <div class="progress-bar" style="margin-bottom: 0.75rem;">
+                            <div class="progress-fill" style="width: ${progress}%;"></div>
+                        </div>
+                        <div class="checklist">
+                `;
+                
+                day.items.forEach((item, idx) => {
+                    const isChecked = checked.includes(idx);
+                    html += `
+                        <div class="check-item">
+                            <input type="checkbox" id="day${day.day}_item${idx}" ${isChecked ? 'checked' : ''} onchange="saveItem(${day.day}, ${idx})">
+                            <label for="day${day.day}_item${idx}">${item}</label>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            content.innerHTML = html;
+            updateWeekStats(week);
+        }
+
+        function saveItem(day, itemIdx) {
+            const checked = JSON.parse(localStorage.getItem(`day_${day}_items`) || '[]');
+            const el = document.getElementById(`day${day}_item${itemIdx}`);
+            
+            if (el.checked) {
+                if (!checked.includes(itemIdx)) checked.push(itemIdx);
+            } else {
+                checked = checked.filter(i => i !== itemIdx);
+            }
+            
+            localStorage.setItem(`day_${day}_items`, JSON.stringify(checked));
+            updateOverallProgress();
+            updateWeekStats(currentWeek);
+            updateLastUpdate();
+        }
+
+        function updateWeekStats(week) {
+            const weekDays = SCHEDULE_DATA.filter(d => d.week === week);
+            let totalChecked = 0, totalItems = 0;
+            
+            weekDays.forEach(day => {
+                const checked = JSON.parse(localStorage.getItem(`day_${day.day}_items`) || '[]');
+                totalChecked += checked.length;
+                totalItems += day.items.length;
+            });
+            
+            const progress = totalItems > 0 ? Math.round((totalChecked / totalItems) * 100) : 0;
+            document.getElementById('weekProgress').textContent = progress + '%';
+            document.getElementById('weekItems').textContent = totalItems;
+        }
+
+        function updateOverallProgress() {
+            let totalChecked = 0, totalItems = 0;
+            
+            SCHEDULE_DATA.forEach(day => {
+                const checked = JSON.parse(localStorage.getItem(`day_${day.day}_items`) || '[]');
+                totalChecked += checked.length;
+                totalItems += day.items.length;
+            });
+            
+            const progress = totalItems > 0 ? Math.round((totalChecked / totalItems) * 100) : 0;
+            document.getElementById('overallPercent').textContent = progress + '%';
+            document.getElementById('overallBar').style.width = progress + '%';
+        }
+
+        function saveFinal() {
+            const finals = {};
+            for (let i = 1; i <= 6; i++) {
+                finals[`final${i}`] = document.getElementById(`final${i}`).checked;
+            }
+            localStorage.setItem('finals', JSON.stringify(finals));
+        }
+
+        function loadFinal() {
+            const finals = JSON.parse(localStorage.getItem('finals') || '{}');
+            for (let i = 1; i <= 6; i++) {
+                if (finals[`final${i}`]) {
+                    document.getElementById(`final${i}`).checked = true;
+                }
+            }
+        }
+
+        function setupAutoSave() {
+            setInterval(() => {
+                updateOverallProgress();
+                updateLastUpdate();
+            }, 5000);
+        }
+
+        window.addEventListener('beforeunload', () => {
+            updateLastUpdate();
+        });
+
+        initApp();
+    </script>
+</body>
+</html>
